@@ -110,7 +110,7 @@
             'vs__dropdown-option--disabled': !selectable(option),
           }"
           :aria-selected="index === typeAheadPointer ? true : null"
-          @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
+          @mouseover="MouseoverAction(option, index)"
           @click.prevent.stop="selectable(option) ? select(option) : null"
         >
           <slot name="option" v-bind="normalizeOptionForSlot(option)">
@@ -223,6 +223,15 @@ export default {
      * @type {Boolean}
      */
     searchable: {
+      type: Boolean,
+      default: true,
+    },
+
+    /**
+     * Enable/disable filtering the options.
+     * @type {Boolean}
+     */
+    hoverSelect: {
       type: Boolean,
       default: true,
     },
@@ -962,6 +971,11 @@ export default {
   },
 
   methods: {
+    MouseoverAction(option, index) {
+      if (this.hoverSelect) {
+        this.selectable(option) ? (this.typeAheadPointer = index) : null
+      }
+    },
     /**
      * Make sure tracked value is
      * one option if possible.
